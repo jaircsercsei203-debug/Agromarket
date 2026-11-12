@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AGROMARKET | El mercado del campo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f4f6f2;color:#26352b}
+header{background:#123d29;color:white;padding:20px 7%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px}
+.logo{font-size:27px;font-weight:bold;color:white}
+.logo span{color:#a5d65e}
+nav a{color:white;text-decoration:none;margin-left:20px;font-weight:bold}
+.hero{background:linear-gradient(120deg,#123d29,#39764a);color:white;padding:75px 7%;text-align:center}
+.hero h1{font-size:42px;margin-bottom:15px}
+.hero p{font-size:18px;margin-bottom:25px}
+.search{display:flex;max-width:750px;margin:auto;gap:10px}
+.search input{flex:1;padding:16px;border:0;border-radius:8px;font-size:16px}
+button{background:#a5d65e;color:#183b24;border:0;padding:15px 22px;border-radius:8px;font-weight:bold;cursor:pointer}
+section{padding:45px 7%}
+h2{margin-bottom:25px;color:#19452d}
+.categories{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:15px}
+.category{background:white;padding:22px;text-align:center;border-radius:12px;font-weight:bold;box-shadow:0 3px 12px #0001}
+.category span{display:block;font-size:32px;margin-bottom:10px}
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px}
+.product{background:white;border-radius:12px;overflow:hidden;box-shadow:0 3px 15px #0001}
+.product img{width:100%;height:175px;object-fit:cover}
+.info{padding:18px}
+.info h3{margin-bottom:9px}
+.price{font-size:22px;color:#39764a;font-weight:bold;margin:12px 0}
+.info p{color:#68746b;font-size:14px;margin-bottom:8px}
+.contact{background:#e4eedb;text-align:center;border-radius:14px;padding:35px}
+footer{background:#123d29;color:white;text-align:center;padding:25px}
+@media(max-width:600px){.hero h1{font-size:30px}nav a{margin-left:8px}.search{flex-direction:column}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">AGRO<span>MARKET</span></div>
+<nav>
+<a href="#categorias">Categorías</a>
+<a href="#publicaciones">Maquinaria</a>
+<a href="#vender">Vender</a>
+</nav>
+</header>
+
+<div class="hero">
+<h1>El mercado del campo</h1>
+<p>Comprá y vendé maquinaria, equipos e insumos agropecuarios.</p>
+<div class="search">
+<input id="busqueda" placeholder="¿Qué estás buscando? Ej: tractor John Deere">
+<button onclick="buscar()">BUSCAR</button>
+</div>
+</div>
+
+<section id="categorias">
+<h2>Explorá las categorías</h2>
+<div class="categories">
+<div class="category"><span>🚜</span>Tractores</div>
+<div class="category"><span>🌾</span>Cosechadoras</div>
+<div class="category"><span>🌱</span>Sembradoras</div>
+<div class="category"><span>💦</span>Fumigadoras</div>
+<div class="category"><span>⚙️</span>Implementos</div>
+<div class="category"><span>🔩</span>Repuestos</div>
+<div class="category"><span>🚛</span>Camiones</div>
+<div class="category"><span>🧰</span>Herramientas</div>
+</div>
+</section>
+
+<section id="publicaciones">
+<h2>Publicaciones destacadas</h2>
+<div class="products" id="productos">
+<div class="product">
+<img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=700" alt="Campo agrícola">
+<div class="info">
+<h3>Tractor agrícola</h3>
+<p>Maquinaria agrícola · Usado</p>
+<div class="price">Consultar precio</div>
+<p>Argentina</p>
+<button onclick="contactar()">Consultar vendedor</button>
+</div>
+</div>
+<div class="product">
+<img src="https://images.unsplash.com/photo-1499529112087-3cb3b73cec95?w=700" alt="Campo">
+<div class="info">
+<h3>Equipamiento rural</h3>
+<p>Implementos · Usado</p>
+<div class="price">Consultar precio</div>
+<p>Argentina</p>
+<button onclick="contactar()">Consultar vendedor</button>
+</div>
+</div>
+<div class="product">
+<img src="https://images.unsplash.com/photo-1472396961693-142e6e269027?w=700" alt="Campo y naturaleza">
+<div class="info">
+<h3>Productos para el agro</h3>
+<p>Insumos · Nuevo</p>
+<div class="price">Consultar precio</div>
+<p>Argentina</p>
+<button onclick="contactar()">Consultar vendedor</button>
+</div>
+</div>
+</div>
+</section>
+
+<section id="vender">
+<div class="contact">
+<h2>¿Tenés algo para vender?</h2>
+<p>Publicá tus productos y conectá con compradores del sector agropecuario.</p>
+<br>
+<button onclick="alert('Próximamente podrás publicar tus productos en AGROMARKET.')">PUBLICAR PRODUCTO</button>
+</div>
+</section>
+
+<footer>
+<h3>AGROMARKET</h3>
+<p>El mercado del campo · Argentina</p>
+<p>© 2026 AGROMARKET</p>
+</footer>
+
+<script>
+function buscar(){
+let texto=document.getElementById('busqueda').value.toLowerCase();
+let productos=document.querySelectorAll('.product');
+productos.forEach(p=>{
+p.style.display=p.innerText.toLowerCase().includes(texto)?'block':'none';
+});
+}
+function contactar(){
+alert('La función de contacto estará disponible próximamente.');
+}
+</script>
+</body>
+</html>
