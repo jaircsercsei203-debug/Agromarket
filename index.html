@@ -137,10 +137,12 @@ footer{background:#123d29;color:white;text-align:center;padding:25px}
 <br>
 
 <form id="formulario">
-<input type="text" placeholder="Nombre del producto" required>
+
+<input id="producto-titulo" type="text"
+placeholder="Nombre del producto" required>
 <br><br>
 
-<select required>
+<select id="producto-categoria" required>
 <option value="">Elegí una categoría</option>
 <option>Tractores</option>
 <option>Cosechadoras</option>
@@ -150,7 +152,7 @@ footer{background:#123d29;color:white;text-align:center;padding:25px}
 <option>Repuestos</option>
 <option>Camiones</option>
 <option>Insumos</option>
-  <option>Maquinaria pesada y construcción</option>
+<option>Maquinaria pesada y construcción</option>
 <option>Grúas</option>
 <option>Excavadoras</option>
 <option>Palas cargadoras</option>
@@ -175,16 +177,36 @@ footer{background:#123d29;color:white;text-align:center;padding:25px}
 </select>
 <br><br>
 
-<input type="number" placeholder="Precio en pesos" required>
+<textarea id="producto-descripcion"
+placeholder="Descripción del producto"
+required></textarea>
 <br><br>
 
-<input type="text" placeholder="Localidad y provincia" required>
+<select id="producto-estado" required>
+<option value="">Estado del producto</option>
+<option value="Nuevo">Nuevo</option>
+<option value="Usado">Usado</option>
+</select>
 <br><br>
 
-<input type="tel" placeholder="Teléfono de contacto" required>
+<input id="producto-precio" type="number"
+placeholder="Precio" min="0" required>
+<br><br>
+
+<select id="producto-moneda" required>
+<option value="ARS">Pesos argentinos (ARS)</option>
+<option value="USD">Dólares (USD)</option>
+</select>
+<br><br>
+
+<input id="producto-ubicacion" type="text"
+placeholder="Localidad y provincia" required>
 <br><br>
 
 <button type="submit">PUBLICAR PRODUCTO</button>
+
+<p id="producto-mensaje"></p>
+
 </form>
 </div>
 </section>
