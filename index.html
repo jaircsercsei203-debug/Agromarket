@@ -72,25 +72,8 @@ footer{background:#123d29;color:white;text-align:center;padding:25px}
 
 <section id="categorias">
 <h2>Explorá las categorías</h2>
-<div class="categories">
-<div class="category"><span>🚜</span>Tractores</div>
-<div class="category"><span>🌾</span>Cosechadoras</div>
-<div class="category"><span>🌱</span>Sembradoras</div>
-<div class="category"><span>💦</span>Fumigadoras</div>
-<div class="category"><span>⚙️</span>Implementos</div>
-<div class="category"><span>🔩</span>Repuestos</div>
-<div class="category"><span>🚛</span>Camiones</div>
-<div class="category"><span>🧰</span>Herramientas</div>
-  <div class="category"><span>🏗️</span>Maquinaria pesada y construcción</div>
-  <div class="category"><span>🐄</span>Ganadería</div>
-<div class="category"><span>🐎</span>Equinos</div>
-<div class="category"><span>🐑</span>Ovinos y caprinos</div>
-<div class="category"><span>🐖</span>Porcinos</div>
-<div class="category"><span>🐔</span>Avicultura</div>
-<div class="category"><span>🌽</span>Alimentos para animales</div>
-<div class="category"><span>🧪</span>Productos veterinarios</div>
-<div class="category"><span>🌱</span>Semillas y fertilizantes</div>
-<div class="category"><span>🚧</span>Instalaciones rurales</div>
+<div class="categories" id="categorias-lista">
+  <p>Cargando categorías de AGROMARKET...</p>
 </div>
 </section>
 
@@ -288,6 +271,76 @@ async function registerUser() {
   message.textContent =
     "Registro iniciado. Revisá tu correo para confirmar la cuenta.";
 }
+ </script>
+
+<script>
+async function cargarCategorias() {
+  const contenedor = document.getElementById("categorias-lista");
+
+  const { data, error } = await supabaseClient
+    .from("categories")
+    .select("id, name, slug")
+    .eq("active", true)
+    .is("parent_id", null)
+    .order("name");
+
+  if (error) {
+    console.error("Error cargando categorías:", error);
+    contenedor.textContent = "No se pudieron cargar las categorías.";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    contenedor.textContent = "Todavía no hay categorías disponibles.";
+    return;
+  }
+
+  contenedor.replaceChildren();
+
+  const iconos = {
+    "agricultura-produccion-vegetal": "🌱",
+    "agua-riego": "💧",
+    "almacenamiento-agropecuario": "🏭",
+    "campos-negocios-rurales": "🌾",
+    "drones-tecnologia": "🚁",
+    "energia-soluciones-rurales": "⚡",
+    "ganaderia": "🐄",
+    "granos-semillas": "🌽",
+    "herramientas-talleres": "🧰",
+    "industria-agropecuaria": "🏭",
+    "instalaciones-rurales": "🚧",
+    "insumos-agropecuarios": "🧪",
+    "lecheria-tambos": "🥛",
+    "lubricantes-mantenimiento": "⚙️",
+    "maquinaria-agricola": "🚜",
+    "maquinaria-pesada": "🏗️",
+    "nutricion-animal": "🐄",
+    "otras-actividades-agropecuarias": "🌳",
+    "repuestos-accesorios": "🔩",
+    "sanidad-animal": "🩺",
+    "servicios-agropecuarios": "🛠️",
+    "transporte-vehiculos": "🚛"
+  };
+
+  data.forEach(categoria => {
+    const tarjeta = document.createElement("div");
+    tarjeta.className = "category";
+
+    const icono = document.createElement("span");
+    icono.textContent = iconos[categoria.slug] || "🌱";
+
+    const nombre = document.createElement("div");
+    nombre.textContent = categoria.name;
+
+    tarjeta.append(icono, nombre);
+    contenedor.appendChild(tarjeta);
+  });
+
+  console.log("AGROMARKET: categorías cargadas:", data.length);
+}
+
+cargarCategorias();
+  
 </script>
 </body>
 </html>
