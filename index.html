@@ -1,700 +1,649 @@
-
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const SUPABASE_URL = "https://lnpcxbilzgzsmsposbat.supabase.co";
-const SUPABASE_KEY = "sb_publishable_c0_2I7UqDsGQc4f06Hs1TA_Z9KGEKzy";
-
-
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-  console.log("AGROMARKET: Supabase inicializado correctamente");
-</script>
-
-<title>AGROMARKET | El mercado del campo</title>
-
-<style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-:root {
-  --verde: #17452f;
-  --verde-oscuro: #103522;
-  --verde-claro: #eaf1e9;
-  --acento: #83a94d;
-  --fondo: #f5f7f4;
-  --texto: #26352b;
-  --gris: #718078;
-  --borde: #e2e8e2;
-}
-
-body {
-  font-family: "Segoe UI", Arial, sans-serif;
-  background: var(--fondo);
-  color: var(--texto);
-  line-height: 1.5;
-}
-
-/* ENCABEZADO */
-
-header {
-  background: white;
-  min-height: 82px;
-  padding: 16px 7%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
-  border-bottom: 1px solid var(--borde);
-}
-
-.logo {
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -1px;
-  color: var(--verde);
-}
-
-.logo span {
-  color: var(--acento);
-}
-
-nav {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 26px;
-}
-
-nav a {
-  color: #425248;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 650;
-  transition: color .2s;
-}
-
-nav a:hover {
-  color: var(--acento);
-}
-
-/* PORTADA Y BUSCADOR */
-
-.hero {
-  background: linear-gradient(115deg, #103522, #245b3c);
-  color: white;
-  padding: 90px 7%;
-  text-align: center;
-}
-
-.hero h1 {
-  font-size: clamp(32px, 5vw, 48px);
-  font-weight: 750;
-  letter-spacing: -1.5px;
-  margin-bottom: 15px;
-}
-
-.hero p {
-  font-size: 17px;
-  color: #e0e9e1;
-  margin-bottom: 32px;
-}
-
-.search {
-  display: flex;
-  max-width: 780px;
-  margin: auto;
-  gap: 10px;
-  background: white;
-  padding: 7px;
-  border-radius: 10px;
-  box-shadow: 0 12px 35px #0002;
-}
-
-.search input {
-  flex: 1;
-  min-width: 0;
-  padding: 15px;
-  border: none;
-  outline: none;
-  font-size: 15px;
-  border-radius: 7px;
-}
-
-/* BOTONES */
-
-button {
-  background: var(--acento);
-  color: white;
-  border: none;
-  padding: 14px 23px;
-  border-radius: 7px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background .2s, transform .2s;
-}
-
-button:hover {
-  background: #6f9340;
-  transform: translateY(-1px);
-}
-
-/* SECCIONES */
-
-section {
-  padding: 58px 7%;
-}
-
-h2 {
-  color: var(--verde);
-  font-size: 25px;
-  font-weight: 750;
-  letter-spacing: -.5px;
-  margin-bottom: 28px;
-}
-
-/* CATEGORÍAS */
-
-.categories {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 15px;
-}
-
-.category {
-  background: white;
-  padding: 23px 20px;
-  min-height: 85px;
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  text-align: left;
-  border: 1px solid var(--borde);
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 650;
-  color: var(--texto);
-  box-shadow: 0 2px 8px #142b1c08;
-  transition: .2s;
-}
-
-#categorias-lista .category > span {
-  display: none;
-}
-
-#categorias-lista .category::before {
-  content: "";
-  display: block;
-  flex-shrink: 0;
-  width: 9px;
-  height: 30px;
-  border-radius: 5px;
-  background: var(--acento);
-}
-
-.category:hover {
-  border-color: var(--acento);
-  box-shadow: 0 7px 20px #142b1c12;
-  transform: translateY(-3px);
-}
-
-/* PUBLICACIONES */
-
-.products {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 24px;
-}
-
-.product {
-  background: white;
-  border: 1px solid var(--borde);
-  border-radius: 11px;
-  overflow: hidden;
-  box-shadow: 0 3px 12px #142b1c09;
-  transition: .2s;
-}
-
-.product:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px #142b1c14;
-}
-
-.product img {
-  width: 100%;
-  height: 190px;
-  object-fit: cover;
-  display: block;
-}
-
-.info {
-  padding: 20px;
-}
-
-.info h3 {
-  font-size: 17px;
-  color: var(--verde);
-  margin-bottom: 10px;
-}
-
-.price {
-  font-size: 22px;
-  color: var(--verde);
-  font-weight: 750;
-  margin: 13px 0;
-}
-
-.info p {
-  color: var(--gris);
-  font-size: 13px;
-  margin-bottom: 9px;
-}
-
-/* FORMULARIOS */
-
-.contact {
-  background: white;
-  text-align: center;
-  border: 1px solid var(--borde);
-  border-radius: 13px;
-  padding: 38px;
-  box-shadow: 0 4px 18px #142b1c08;
-}
-
-form {
-  max-width: 650px;
-  margin: 25px auto 0;
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 14px 15px;
-  border: 1px solid #dce4dc;
-  border-radius: 7px;
-  background: white;
-  color: var(--texto);
-  font-family: inherit;
-  font-size: 14px;
-  outline: none;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: var(--acento);
-  box-shadow: 0 0 0 3px #83a94d20;
-}
-
-textarea {
-  min-height: 110px;
-  resize: vertical;
-}
-
-form button {
-  width: 100%;
-  margin-top: 8px;
-}
-
-/* REGISTRO */
-
-#auth-section {
-  max-width: 850px;
-  margin: 0 auto;
-  padding: 55px 7%;
-  text-align: center;
-}
-
-#auth-section input,
-#auth-section select {
-  margin-bottom: 12px;
-}
-
-#auth-section button {
-  margin-top: 8px;
-}
-
-/* PIE DE PÁGINA */
-
-footer {
-  background: var(--verde-oscuro);
-  color: white;
-  text-align: center;
-  padding: 35px 20px;
-}
-
-footer h3 {
-  font-size: 23px;
-  margin-bottom: 8px;
-}
-
-footer p {
-  color: #d1ddd3;
-  font-size: 13px;
-  margin-top: 5px;
-}
-
-/* ADAPTACIÓN A CELULARES */
-
-@media (max-width: 650px) {
-  header {
-    padding: 18px 5%;
-  }
-
-  nav {
-    gap: 14px;
-  }
-
-  nav a {
-    font-size: 12px;
-  }
-
-  .hero {
-    padding: 65px 5%;
-  }
-
-  .hero h1 {
-    font-size: 32px;
-  }
-
-  .hero p {
-    font-size: 15px;
-  }
-
-  .search {
-    flex-direction: column;
-  }
-
-  section {
-    padding: 40px 5%;
-  }
-
-  .categories {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-  }
-
-  .category {
-    padding: 16px 12px;
-    font-size: 12px;
-  }
-
-  .products {
-    grid-template-columns: 1fr;
-  }
-
-  .contact {
-    padding: 25px 17px;
-  }
-}
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#123b2a">
+  <meta name="description" content="AGROMARKET: el mercado agropecuario para comprar, vender y conectar en todo el país.">
+  <title>AGROMARKET | El mercado del agro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,500,0,0" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root{--green:#17452f;--green-dark:#0d2e20;--green-deep:#092419;--lime:#a6cf62;--lime-dark:#83ad43;--ink:#1d2b23;--muted:#718078;--line:#e4eae4;--paper:#fff;--bg:#f4f7f3;--soft:#eaf1e9;--shadow:0 12px 35px rgba(17,47,30,.08);--radius:18px}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;scroll-padding-top:100px}
+    body{font-family:'DM Sans',Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+    body.modal-open{overflow:hidden}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    a{color:inherit;text-decoration:none}
+    .material-symbols-outlined{font-size:22px;line-height:1;vertical-align:middle;font-variation-settings:'FILL' 0,'wght' 500,'GRAD' 0,'opsz' 24}
+    .container{width:min(1280px,calc(100% - 56px));margin-inline:auto}
+    .topline{height:4px;background:linear-gradient(90deg,var(--lime),#d6e9b3,var(--green))}
+    .site-header{height:82px;background:rgba(255,255,255,.97);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30;backdrop-filter:blur(16px)}
+    .header-inner{height:100%;width:min(1360px,calc(100% - 48px));margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px}
+    .brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+    .brand-mark{width:43px;height:43px;border-radius:13px;background:linear-gradient(145deg,#255d3d,#0e3423);display:grid;place-items:center;color:#c4e78c;box-shadow:0 5px 14px #17452f24}
+    .brand-mark .material-symbols-outlined{font-size:28px}
+    .brand-name{font-family:Manrope,sans-serif;font-weight:800;font-size:24px;letter-spacing:-1.1px;line-height:1;color:var(--green)}
+    .brand-name span{color:#8eaf4f}
+    .brand-tag{font-size:9px;color:#7c887f;font-weight:700;letter-spacing:1.15px;margin-top:4px}
+    .main-nav{display:flex;align-items:center;gap:27px;margin-left:auto}
+    .nav-link{border:0;background:transparent;color:#4a574e;font-size:13px;font-weight:700;padding:12px 0;display:flex;align-items:center;gap:6px;transition:.2s}
+    .nav-link:hover,.nav-link.active{color:var(--green)}
+    .nav-link .material-symbols-outlined{font-size:19px}
+    .header-actions{display:flex;align-items:center;gap:10px}
+    .btn{border:0;border-radius:10px;padding:12px 18px;font-size:13px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .2s,background .2s,box-shadow .2s}
+    .btn:hover{transform:translateY(-1px)}
+    .btn-outline{background:#fff;color:var(--green);border:1px solid #b8c8bb}
+    .btn-outline:hover{background:var(--soft)}
+    .btn-primary{background:var(--green);color:white;box-shadow:0 7px 17px #17452f20}
+    .btn-primary:hover{background:#0f3825;box-shadow:0 9px 22px #17452f30}
+    .btn-lime{background:var(--lime);color:#183321}
+    .btn-lime:hover{background:#b7dc7a}
+    .btn-ghost{background:#edf3ed;color:var(--green)}
+    .btn-block{width:100%}
+    .mobile-toggle{display:none;width:42px;height:42px;border:1px solid var(--line);background:white;border-radius:10px;color:var(--green)}
+    .mobile-menu{display:none;background:#fff;border-top:1px solid var(--line);padding:10px 24px 18px;box-shadow:var(--shadow)}
+    .mobile-menu.open{display:grid;gap:4px}
+    .mobile-menu button{width:100%;text-align:left;padding:12px;border:0;background:white;color:var(--ink);font-weight:700;border-radius:8px}
+
+    /* PORTADA CON CARRUSEL */
+    .hero{position:relative;min-height:530px;overflow:hidden;background:var(--green-deep);color:#fff;isolation:isolate}
+    .hero-slides,.hero-slide{position:absolute;inset:0}
+    .hero-slide{opacity:0;transition:opacity .9s ease;background-size:cover;background-position:center;z-index:-2}
+    .hero-slide.active{opacity:1}
+    .hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(6,32,21,.94) 0%,rgba(9,40,25,.82) 38%,rgba(9,40,25,.25) 75%,rgba(9,40,25,.08) 100%),linear-gradient(0deg,rgba(5,29,18,.34),transparent 55%)}
+    .hero-content{min-height:530px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding-top:30px;padding-bottom:88px;position:relative;z-index:2}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;color:#d4e9b2;text-transform:uppercase;letter-spacing:1.7px;font-weight:800;font-size:11px;margin-bottom:19px}
+    .eyebrow:before{content:"";width:26px;height:2px;background:var(--lime)}
+    .hero h1{font-family:Manrope,sans-serif;font-size:clamp(38px,5.2vw,66px);line-height:1.06;letter-spacing:-2.5px;max-width:690px;font-weight:800;margin-bottom:18px}
+    .hero h1 span{color:#b5dd71}
+    .hero-copy{font-size:17px;color:#e0e9e0;max-width:570px;line-height:1.65;margin-bottom:28px}
+    .hero-search{width:min(720px,100%);display:flex;gap:8px;background:white;padding:7px;border-radius:13px;box-shadow:0 18px 45px #061d1280}
+    .hero-search .search-icon{color:#647168;display:grid;place-items:center;padding-left:10px}
+    .hero-search input{width:100%;min-width:0;border:0;outline:0;color:var(--ink);padding:12px 7px;font-size:14px;background:transparent}
+    .hero-search input::placeholder{color:#8b968e}
+    .hero-search button{min-width:120px}
+    .hero-quick{display:flex;flex-wrap:wrap;gap:9px;margin-top:17px;color:#e1e9df;font-size:12px}
+    .hero-quick strong{color:white}
+    .hero-quick button{border:0;background:transparent;color:#e1e9df;text-decoration:underline;text-underline-offset:3px;font-size:12px}
+    .hero-controls{position:absolute;right:max(28px,calc((100vw - 1280px)/2));bottom:29px;z-index:3;display:flex;align-items:center;gap:12px}
+    .hero-arrow{width:40px;height:40px;border-radius:50%;border:1px solid #ffffff70;color:white;background:#ffffff18;backdrop-filter:blur(8px);display:grid;place-items:center}
+    .hero-arrow:hover{background:#ffffff33}
+    .hero-dots{display:flex;gap:7px;align-items:center}
+    .hero-dot{width:8px;height:8px;border:0;border-radius:30px;background:#ffffff70;transition:.25s}
+    .hero-dot.active{width:25px;background:var(--lime)}
+    .hero-caption{position:absolute;left:max(28px,calc((100vw - 1280px)/2));bottom:39px;color:#ffffffb0;font-size:10px;letter-spacing:.7px;z-index:2}
+
+    .trust-strip{background:#fff;border-bottom:1px solid var(--line)}
+    .trust-inner{display:grid;grid-template-columns:repeat(3,1fr);padding:18px 0;gap:16px}
+    .trust-item{display:flex;align-items:center;justify-content:center;gap:11px;color:#536157;font-size:12px;font-weight:700}
+    .trust-item .material-symbols-outlined{color:#6e9841;font-size:23px}
+
+    .section{padding:66px 0}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:25px}
+    .section-kicker{font-size:10px;color:#78934e;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;margin-bottom:8px}
+    .section-title{font-family:Manrope,sans-serif;color:var(--green);font-size:clamp(25px,3vw,34px);font-weight:800;line-height:1.15;letter-spacing:-1px}
+    .section-subtitle{color:var(--muted);font-size:14px;margin-top:8px;max-width:620px}
+    .text-link{color:var(--green);font-weight:800;font-size:13px;display:flex;align-items:center;gap:6px;white-space:nowrap}
+    .text-link:hover{color:#638d35}
+
+    .guest-cta{background:linear-gradient(110deg,#0e3825,#1e5839);border-radius:20px;padding:27px 34px;color:white;display:flex;align-items:center;justify-content:space-between;gap:24px;overflow:hidden;position:relative;box-shadow:var(--shadow)}
+    .guest-cta:after{content:"agro";position:absolute;right:180px;bottom:-52px;font-family:Manrope,sans-serif;font-size:170px;font-weight:800;color:#ffffff08;pointer-events:none}
+    .guest-cta-copy{position:relative;z-index:1}
+    .guest-cta h2{font-family:Manrope,sans-serif;font-size:22px;letter-spacing:-.5px;margin-bottom:6px}
+    .guest-cta p{font-size:13px;color:#d5e1d7}
+    .guest-cta .btn{position:relative;z-index:1;white-space:nowrap}
+
+    .dashboard{padding:42px 0 28px}
+    .welcome-panel{background:linear-gradient(110deg,#fff,#f3f7f0);border:1px solid var(--line);border-radius:20px;padding:28px 30px;display:flex;align-items:center;justify-content:space-between;gap:24px;box-shadow:0 8px 28px #173b2410}
+    .welcome-panel h1{font-family:Manrope,sans-serif;color:var(--green);font-size:29px;letter-spacing:-1px}
+    .welcome-panel p{color:var(--muted);font-size:14px;margin-top:5px}
+    .welcome-tag{display:inline-flex;align-items:center;gap:7px;color:#678b3a;background:#edf5e4;border-radius:50px;padding:7px 12px;font-size:11px;font-weight:800;margin-bottom:9px}
+    .welcome-tag .material-symbols-outlined{font-size:16px}
+    .dashboard-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .dashboard-grid{display:grid;grid-template-columns:1.05fr 1.95fr;gap:24px;margin-top:24px}
+    .dashboard-card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:23px;box-shadow:0 5px 20px #173b2408}
+    .dashboard-card h3{font-family:Manrope,sans-serif;color:var(--green);font-size:17px;margin-bottom:7px}
+    .dashboard-card p{font-size:12px;color:var(--muted)}
+    .quick-action{display:flex;align-items:center;gap:13px;border:1px solid var(--line);border-radius:12px;padding:13px;margin-top:13px;background:white;text-align:left;width:100%;color:var(--ink);transition:.2s}
+    .quick-action:hover{border-color:#a5c57d;background:#f9fcf6;transform:translateY(-1px)}
+    .quick-action-icon{width:39px;height:39px;border-radius:11px;background:#edf5e7;color:#557f2f;display:grid;place-items:center;flex-shrink:0}
+    .quick-action strong{display:block;font-size:13px;color:var(--green)}
+    .quick-action small{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+
+    .categories-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+    .category-card{border:1px solid var(--line);border-radius:14px;background:white;min-height:112px;padding:18px;display:flex;align-items:center;gap:13px;text-align:left;color:var(--ink);transition:.2s;box-shadow:0 3px 12px #193d2507}
+    .category-card:hover{border-color:#a8c486;box-shadow:0 10px 25px #193d2510;transform:translateY(-3px)}
+    .category-icon{width:43px;height:43px;border-radius:12px;background:#edf4e8;color:#4f7933;display:grid;place-items:center;flex-shrink:0}
+    .category-icon .material-symbols-outlined{font-size:24px}
+    .category-card strong{font-size:12px;line-height:1.35;display:block;color:#2b3a30}
+    .category-card small{display:block;font-size:10px;color:#8b958d;margin-top:5px}
+
+    .publication-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+    .listing-card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:.2s;box-shadow:0 4px 15px #173b2408}
+    .listing-card:hover{transform:translateY(-4px);box-shadow:0 13px 28px #173b2415}
+    .listing-image{height:170px;position:relative;background:#dfe8da;overflow:hidden}
+    .listing-image img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
+    .listing-card:hover .listing-image img{transform:scale(1.04)}
+    .illustrative-label{position:absolute;left:11px;top:11px;background:#0e3825d9;color:white;border-radius:30px;padding:5px 9px;font-size:9px;font-weight:800;letter-spacing:.3px}
+    .listing-body{padding:16px}
+    .listing-category{color:#7c954f;text-transform:uppercase;letter-spacing:.8px;font-size:9px;font-weight:800;margin-bottom:6px}
+    .listing-body h3{font-size:14px;line-height:1.35;color:var(--green);margin-bottom:8px;min-height:38px}
+    .listing-meta{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px;margin-top:8px}
+    .listing-price{font-family:Manrope,sans-serif;color:#1a4b30;font-weight:800;font-size:17px;margin-top:10px}
+    .listing-description{color:#78837b;font-size:11px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:33px}
+    .empty-state{grid-column:1/-1;background:#fff;border:1px dashed #bdcbbb;border-radius:16px;text-align:center;padding:42px 20px}
+    .empty-state .material-symbols-outlined{font-size:35px;color:#86a65a}
+    .empty-state h3{font-family:Manrope,sans-serif;color:var(--green);font-size:18px;margin:10px 0 5px}
+    .empty-state p{color:var(--muted);font-size:13px;margin-bottom:17px}
+    .results-note{color:var(--muted);font-size:12px;margin-top:-15px;margin-bottom:18px}
+
+    .publish-panel{background:white;border:1px solid var(--line);border-radius:20px;padding:30px;box-shadow:var(--shadow)}
+    .publish-panel-header{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:22px}
+    .publish-panel h2{font-family:Manrope,sans-serif;color:var(--green);font-size:24px;letter-spacing:-.7px}
+    .publish-panel-header p{font-size:13px;color:var(--muted);margin-top:5px}
+    .publish-form{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+    .field{display:flex;flex-direction:column;gap:7px}
+    .field.full{grid-column:1/-1}
+    .field label{font-size:12px;font-weight:800;color:#405148}
+    .field input,.field select,.field textarea,.auth-field input,.auth-field select{width:100%;padding:13px 14px;border:1px solid #dce5dc;border-radius:10px;background:#fff;color:var(--ink);outline:0;font-size:13px;transition:.2s}
+    .field input:focus,.field select:focus,.field textarea:focus,.auth-field input:focus,.auth-field select:focus{border-color:#8eae60;box-shadow:0 0 0 3px #9ec36b25}
+    .field textarea{min-height:110px;resize:vertical}
+    .form-foot{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:5px}
+    .form-foot small{color:var(--muted);font-size:11px;max-width:440px}
+    .message{font-size:12px;margin-top:12px;min-height:18px;color:var(--green)}
+    .hidden{display:none!important}
+    .section-anchor{scroll-margin-top:105px}
+
+    .footer{background:#0b2b1d;color:#fff;padding:48px 0 25px;margin-top:30px}
+    .footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:35px;padding-bottom:28px;border-bottom:1px solid #ffffff20}
+    .footer .brand-name{color:#fff}
+    .footer .brand-tag{color:#b5c6b8}
+    .footer-copy{color:#c3d0c6;font-size:12px;max-width:350px;margin-top:14px;line-height:1.7}
+    .footer h4{font-size:12px;margin-bottom:14px;color:#d7e8c0}
+    .footer-links{display:grid;gap:9px;color:#c3d0c6;font-size:12px}
+    .footer-links a:hover{color:#fff}
+    .footer-bottom{display:flex;justify-content:space-between;gap:15px;padding-top:20px;color:#9fb2a4;font-size:10px}
+
+    /* VENTANA DE ACCESO */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(6,25,16,.68);backdrop-filter:blur(7px);z-index:100;display:grid;place-items:center;padding:20px;opacity:1;transition:opacity .2s}
+    .modal-backdrop.hidden{display:none}
+    .auth-modal{width:min(480px,100%);background:white;border-radius:20px;box-shadow:0 25px 90px #061d1270;overflow:hidden;position:relative;max-height:calc(100vh - 40px);overflow-y:auto}
+    .auth-modal-top{background:linear-gradient(120deg,#0d3422,#20573a);padding:25px 28px;color:white}
+    .auth-modal-top h2{font-family:Manrope,sans-serif;font-size:23px;letter-spacing:-.7px;margin-top:15px}
+    .auth-modal-top p{font-size:12px;color:#d9e6da;margin-top:5px}
+    .modal-close{position:absolute;right:15px;top:15px;width:34px;height:34px;border:1px solid #ffffff55;border-radius:50%;background:#ffffff16;color:#fff;display:grid;place-items:center}
+    .auth-tabs{display:grid;grid-template-columns:1fr 1fr;background:#f2f5f1;padding:5px;margin:20px 24px 0;border-radius:10px}
+    .auth-tab{border:0;border-radius:8px;background:transparent;color:#657168;padding:10px;font-weight:800;font-size:12px}
+    .auth-tab.active{background:white;color:var(--green);box-shadow:0 2px 8px #102c1a12}
+    .auth-form{padding:20px 24px 25px;display:grid;gap:13px}
+    .auth-field{display:grid;gap:6px}
+    .auth-field label{font-size:11px;font-weight:800;color:#4c5a50}
+    .auth-note{font-size:11px;color:#879188;text-align:center;line-height:1.5}
+
+    @media(max-width:1050px){.main-nav{gap:16px}.header-inner{width:calc(100% - 32px)}.publication-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.categories-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(max-width:780px){.container{width:calc(100% - 36px)}.main-nav,.header-actions{display:none}.mobile-toggle{display:grid;place-items:center}.site-header{height:72px}.hero,.hero-content{min-height:520px}.hero-content{padding-top:20px;padding-bottom:100px}.hero h1{letter-spacing:-1.5px}.hero-copy{font-size:15px}.hero::after{background:linear-gradient(90deg,rgba(6,32,21,.92),rgba(9,40,25,.65)),linear-gradient(0deg,rgba(5,29,18,.4),transparent 65%)}.hero-controls{right:18px;bottom:22px}.hero-caption{left:18px;bottom:32px;max-width:48%}.trust-inner{grid-template-columns:1fr;gap:12px;padding:17px 0}.trust-item{justify-content:flex-start}.section{padding:49px 0}.dashboard-grid{grid-template-columns:1fr}.categories-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.welcome-panel{align-items:flex-start;flex-direction:column}.guest-cta{padding:24px;align-items:flex-start;flex-direction:column}.guest-cta .btn{width:100%}.footer-grid{grid-template-columns:1fr 1fr}.footer-grid>div:first-child{grid-column:1/-1}}
+    @media(max-width:520px){.brand-name{font-size:21px}.brand-mark{width:39px;height:39px}.hero,.hero-content{min-height:570px}.hero h1{font-size:39px}.hero-search{flex-wrap:wrap;padding:7px}.hero-search input{font-size:12px}.hero-search button{width:100%;padding:13px}.hero-quick{font-size:11px}.hero-caption{display:none}.hero-controls{left:18px;right:auto}.section-head{align-items:flex-start;flex-direction:column}.publication-grid{grid-template-columns:1fr}.categories-grid{grid-template-columns:1fr 1fr;gap:9px}.category-card{padding:12px;gap:9px;min-height:88px}.category-icon{width:36px;height:36px}.category-card strong{font-size:11px}.publish-panel{padding:21px 16px}.publish-form{grid-template-columns:1fr}.field.full,.form-foot{grid-column:auto}.form-foot{align-items:stretch;flex-direction:column}.welcome-panel{padding:22px}.welcome-panel h1{font-size:24px}.dashboard-actions{width:100%}.dashboard-actions .btn{flex:1}.footer-grid{grid-template-columns:1fr}.footer-grid>div:first-child{grid-column:auto}.footer-bottom{flex-direction:column}.auth-modal-top{padding:23px}.auth-form{padding:17px 20px 22px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+  </style>
 </head>
 <body>
-<header>
-<div class="logo">AGRO<span>MARKET</span></div>
-<nav>
-<a href="#categorias">Categorías</a>
-<a href="#publicaciones">Maquinaria</a>
-<a href="#vender">Vender</a>
-</nav>
-</header>
+  <div class="topline"></div>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#inicio" aria-label="AGROMARKET inicio">
+        <div class="brand-mark"><span class="material-symbols-outlined">agriculture</span></div>
+        <div><div class="brand-name">AGRO<span>MARKET</span></div><div class="brand-tag">CONECTANDO EL CAMPO</div></div>
+      </a>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <a class="nav-link active" href="#inicio"><span class="material-symbols-outlined">home</span>Inicio</a>
+        <button class="nav-link" id="nav-categories" type="button"><span class="material-symbols-outlined">grid_view</span>Categorías</button>
+        <a class="nav-link" href="#publicaciones"><span class="material-symbols-outlined">search</span>Explorar</a>
+        <button class="nav-link auth-required" type="button" onclick="openPublish()"><span class="material-symbols-outlined">add_circle</span>Publicar</button>
+      </nav>
+      <div class="header-actions" id="guest-actions">
+        <button class="btn btn-outline" type="button" onclick="openAuth('login')"><span class="material-symbols-outlined">login</span>Ingresar</button>
+        <button class="btn btn-primary" type="button" onclick="openAuth('signup')"><span class="material-symbols-outlined">person_add</span>Crear cuenta</button>
+      </div>
+      <div class="header-actions hidden" id="user-actions">
+        <button class="btn btn-outline" type="button" onclick="scrollToDashboard()"><span class="material-symbols-outlined">account_circle</span><span id="header-user-name">Mi cuenta</span></button>
+        <button class="btn btn-primary" type="button" onclick="signOutUser()">Salir</button>
+      </div>
+      <button class="mobile-toggle" id="mobile-toggle" aria-label="Abrir menú" type="button"><span class="material-symbols-outlined">menu</span></button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <button onclick="location.hash='inicio';closeMobileMenu()">Inicio</button>
+      <button onclick="handleCategories();closeMobileMenu()">Categorías</button>
+      <button onclick="location.hash='publicaciones';closeMobileMenu()">Explorar publicaciones</button>
+      <button onclick="openPublish();closeMobileMenu()">Publicar un producto</button>
+      <button id="mobile-auth-button" onclick="openAuth('signup');closeMobileMenu()">Crear cuenta / Ingresar</button>
+      <button id="mobile-logout-button" class="hidden" onclick="signOutUser();closeMobileMenu()">Cerrar sesión</button>
+    </div>
+  </header>
 
-<div class="hero">
-<h1>El mercado del campo</h1>
-<p>Comprá y vendé maquinaria, equipos e insumos agropecuarios.</p>
-<div class="search">
-<input id="busqueda" placeholder="¿Qué estás buscando? Ej: tractor John Deere">
-<button onclick="buscar()">BUSCAR</button>
-</div>
-</div>
+  <main>
+    <section class="hero section-anchor" id="inicio" aria-label="Presentación de AGROMARKET">
+      <div class="hero-slides" aria-hidden="true">
+        <div class="hero-slide active" style="background-image:url('https://aegro.com.br/images/blog/geradas/plano-safra-2026-27-valores-novidades.webp')"></div>
+        <div class="hero-slide" style="background-image:url('https://aegro.com.br/images/blog/geradas/fazenda-mista-como-calcular-e-comparar-a-rentabilidade-real-de-graos-e-pecuaria-de-corte.webp')"></div>
+        <div class="hero-slide" style="background-image:url('https://aegro.com.br/images/blog/geradas/brachiaria-o-guia-completo-para-pasto-palhada-e-aumento-de-produtividade.webp')"></div>
+      </div>
+      <div class="container hero-content">
+        <div class="eyebrow">El mercado agropecuario argentino</div>
+        <h1>El campo tiene<br><span>un nuevo mercado.</span></h1>
+        <p class="hero-copy">Comprá, vendé y conectá con el mundo agropecuario desde un solo lugar. Maquinaria, insumos, hacienda, repuestos y mucho más.</p>
+        <form class="hero-search" id="search-form">
+          <span class="search-icon material-symbols-outlined">search</span>
+          <input id="search-input" type="search" placeholder="Buscá tractores, cosechadoras, hacienda, insumos..." aria-label="Buscar publicaciones">
+          <button class="btn btn-primary" type="submit">Buscar <span class="material-symbols-outlined">arrow_forward</span></button>
+        </form>
+        <div class="hero-quick"><strong>Explorá:</strong><button type="button" onclick="quickSearch('tractor')">Tractores</button><button type="button" onclick="quickSearch('cosechadora')">Cosechadoras</button><button type="button" onclick="quickSearch('ganadería')">Ganadería</button><button type="button" onclick="quickSearch('insumos')">Insumos</button></div>
+      </div>
+      <div class="hero-caption" id="hero-caption">TECNOLOGÍA · PRODUCCIÓN · OPORTUNIDADES</div>
+      <div class="hero-controls">
+        <button class="hero-arrow" type="button" id="hero-prev" aria-label="Imagen anterior"><span class="material-symbols-outlined">chevron_left</span></button>
+        <div class="hero-dots" id="hero-dots" aria-label="Seleccionar imagen"></div>
+        <button class="hero-arrow" type="button" id="hero-next" aria-label="Imagen siguiente"><span class="material-symbols-outlined">chevron_right</span></button>
+      </div>
+    </section>
 
-<section id="categorias">
-<h2>Explorá las categorías</h2>
-<div class="categories" id="categorias-lista">
-  <p>Cargando categorías de AGROMARKET...</p>
-</div>
-</section>
+    <div class="trust-strip">
+      <div class="container trust-inner">
+        <div class="trust-item"><span class="material-symbols-outlined">agriculture</span>Todo el agro, en un solo lugar</div>
+        <div class="trust-item"><span class="material-symbols-outlined">handshake</span>Conectá directamente con otros usuarios</div>
+        <div class="trust-item"><span class="material-symbols-outlined">location_on</span>Oportunidades en toda Argentina</div>
+      </div>
+    </div>
 
-<section id="publicaciones">
-<h2>Publicaciones destacadas</h2>
-<div class="products" id="productos">
-<div class="product">
-<img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=700" alt="Campo agrícola">
-<div class="info">
-<h3>Tractor agrícola</h3>
-<p>Maquinaria agrícola · Usado</p>
-<div class="price">Consultar precio</div>
-<p>Argentina</p>
-<button onclick="contactar()">Consultar vendedor</button>
-</div>
-</div>
-<div class="product">
-<img src="https://images.unsplash.com/photo-1499529112087-3cb3b73cec95?w=700" alt="Campo">
-<div class="info">
-<h3>Equipamiento rural</h3>
-<p>Implementos · Usado</p>
-<div class="price">Consultar precio</div>
-<p>Argentina</p>
-<button onclick="contactar()">Consultar vendedor</button>
-</div>
-</div>
-<div class="product">
-<img src="https://images.unsplash.com/photo-1472396961693-142e6e269027?w=700" alt="Campo y naturaleza">
-<div class="info">
-<h3>Productos para el agro</h3>
-<p>Insumos · Nuevo</p>
-<div class="price">Consultar precio</div>
-<p>Argentina</p>
-<button onclick="contactar()">Consultar vendedor</button>
-</div>
-</div>
-</div>
-</section>
+    <section class="section" id="guest-section">
+      <div class="container">
+        <div class="guest-cta">
+          <div class="guest-cta-copy">
+            <div class="eyebrow">Tu próximo negocio empieza acá</div>
+            <h2>Creá tu cuenta en AGROMARKET</h2>
+            <p>Registrate para explorar categorías, publicar tus productos y comenzar a conectar.</p>
+          </div>
+          <button class="btn btn-lime" type="button" onclick="openAuth('signup')">Crear cuenta gratis <span class="material-symbols-outlined">arrow_forward</span></button>
+        </div>
+      </div>
+    </section>
 
-<section id="vender">
-<div class="contact">
-<h2>Publicá tu producto en AGROMARKET</h2>
-<p>Completá los datos para ofrecer tu maquinaria o producto.</p>
-<br>
+    <section class="dashboard hidden" id="dashboard-section">
+      <div class="container">
+        <div class="welcome-panel">
+          <div>
+            <div class="welcome-tag"><span class="material-symbols-outlined">verified_user</span>Tu espacio AGROMARKET</div>
+            <h1>¡Bienvenido, <span id="welcome-name">productor</span>!</h1>
+            <p>¿Qué necesitás hacer hoy? Explorá el mercado o publicá lo que querés ofrecer.</p>
+          </div>
+          <div class="dashboard-actions">
+            <button class="btn btn-primary" type="button" onclick="openPublish()"><span class="material-symbols-outlined">add_circle</span>Publicar producto</button>
+            <button class="btn btn-outline" type="button" onclick="scrollToListings()"><span class="material-symbols-outlined">search</span>Explorar</button>
+          </div>
+        </div>
+        <div class="dashboard-grid">
+          <div class="dashboard-card">
+            <h3>Accesos rápidos</h3>
+            <p>Las acciones principales de tu cuenta.</p>
+            <button class="quick-action" type="button" onclick="openPublish()"><span class="quick-action-icon material-symbols-outlined">add_box</span><span><strong>Publicar un producto</strong><small>Ofrecé maquinaria, insumos o servicios.</small></span></button>
+            <button class="quick-action" type="button" onclick="scrollToListings()"><span class="quick-action-icon material-symbols-outlined">manage_search</span><span><strong>Explorar publicaciones</strong><small>Encontrá oportunidades en el agro.</small></span></button>
+          </div>
+          <div class="dashboard-card">
+            <h3>Elegí por dónde empezar</h3>
+            <p>Seleccioná un rubro para ver sus publicaciones y preparar una nueva oferta.</p>
+            <div class="categories-grid" id="dashboard-category-shortcuts" style="grid-template-columns:repeat(2,minmax(0,1fr));margin-top:13px"></div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<form id="formulario">
+    <section class="section hidden" id="categories-section">
+      <div class="container">
+        <div class="section-head"><div><div class="section-kicker">Encontrá tu rubro</div><h2 class="section-title">Categorías de AGROMARKET</h2><p class="section-subtitle">Elegí una categoría para explorar productos y oportunidades relacionadas.</p></div></div>
+        <div class="categories-grid" id="categories-grid"><div class="empty-state"><span class="material-symbols-outlined">hourglass_top</span><p>Cargando categorías...</p></div></div>
+      </div>
+    </section>
 
-<input id="producto-titulo" type="text"
-placeholder="Nombre del producto" required>
-<br><br>
+    <section class="section section-anchor" id="publicaciones">
+      <div class="container">
+        <div class="section-head"><div><div class="section-kicker">El mercado se mueve</div><h2 class="section-title">Publicaciones recientes</h2><p class="section-subtitle">Conocé las ofertas publicadas por usuarios de AGROMARKET.</p></div><a class="text-link" href="#publicaciones" onclick="clearSearch()">Ver todas <span class="material-symbols-outlined">arrow_forward</span></a></div>
+        <p class="results-note" id="results-note"></p>
+        <div class="publication-grid" id="publication-grid">
+          <div class="empty-state"><span class="material-symbols-outlined">inventory_2</span><h3>Estamos preparando el mercado</h3><p>Las publicaciones disponibles aparecerán acá.</p></div>
+        </div>
+      </div>
+    </section>
 
-<select id="producto-categoria" required>
-<option value="">Elegí una categoría</option>
-<option>Tractores</option>
-<option>Cosechadoras</option>
-<option>Sembradoras</option>
-<option>Fumigadoras</option>
-<option>Implementos</option>
-<option>Repuestos</option>
-<option>Camiones</option>
-<option>Insumos</option>
-<option>Maquinaria pesada y construcción</option>
-<option>Grúas</option>
-<option>Excavadoras</option>
-<option>Palas cargadoras</option>
-<option>Retropalas</option>
-<option>Topadoras</option>
-<option>Motoniveladoras</option>
-<option>Minicargadoras</option>
-<option>Autoelevadores</option>
-<option>Rodillos compactadores</option>
-<option>Camiones volcadores</option>
-<option>Plataformas elevadoras</option>
-<option>Repuestos de maquinaria pesada</option>
-<option>Ganadería</option>
-<option>Equinos</option>
-<option>Ovinos y caprinos</option>
-<option>Porcinos</option>
-<option>Avicultura</option>
-<option>Alimentos para animales</option>
-<option>Productos veterinarios</option>
-<option>Semillas y fertilizantes</option>
-<option>Instalaciones rurales</option>
-</select>
-<br><br>
+    <section class="section hidden" id="publish-section">
+      <div class="container">
+        <div class="publish-panel">
+          <div class="publish-panel-header"><div><div class="section-kicker">Ofrecé tus productos</div><h2>Publicá en AGROMARKET</h2><p>Completá los datos principales de lo que querés vender.</p></div><button type="button" class="btn btn-ghost" onclick="closePublish()"><span class="material-symbols-outlined">close</span>Cerrar</button></div>
+          <form id="publish-form" class="publish-form">
+            <div class="field full"><label for="listing-title">Nombre de la publicación *</label><input id="listing-title" type="text" maxlength="120" placeholder="Ej.: Tractor agrícola John Deere 6120J" required></div>
+            <div class="field"><label for="listing-category">Categoría *</label><select id="listing-category" required><option value="">Seleccioná una categoría</option></select></div>
+            <div class="field"><label for="listing-condition">Estado *</label><select id="listing-condition" required><option value="">Seleccioná el estado</option><option value="Nuevo">Nuevo</option><option value="Usado">Usado</option></select></div>
+            <div class="field"><label for="listing-price">Precio *</label><input id="listing-price" type="number" min="0" step="0.01" placeholder="Ej.: 85000000" required></div>
+            <div class="field"><label for="listing-currency">Moneda</label><select id="listing-currency"><option value="ARS">Pesos argentinos (ARS)</option><option value="USD">Dólares (USD)</option><option value="Consultar">A convenir / consultar</option></select></div>
+            <div class="field full"><label for="listing-location">Ubicación *</label><input id="listing-location" type="text" maxlength="120" placeholder="Localidad y provincia" required></div>
+            <div class="field full"><label for="listing-description">Descripción *</label><textarea id="listing-description" maxlength="3000" placeholder="Contá las características, el estado y los detalles importantes del producto..." required></textarea></div>
+            <div class="form-foot"><small>La publicación quedará asociada a tu cuenta. Revisá los datos antes de enviarla. En el siguiente paso incorporaremos la carga de fotografías.</small><button class="btn btn-primary" id="publish-submit" type="submit">Publicar producto <span class="material-symbols-outlined">arrow_forward</span></button></div>
+          </form>
+          <p class="message" id="publish-message" role="status"></p>
+        </div>
+      </div>
+    </section>
+  </main>
 
-<textarea id="producto-descripcion"
-placeholder="Descripción del producto"
-required></textarea>
-<br><br>
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><a class="brand" href="#inicio"><div class="brand-mark"><span class="material-symbols-outlined">agriculture</span></div><div><div class="brand-name">AGRO<span>MARKET</span></div><div class="brand-tag">CONECTANDO EL CAMPO</div></div></a><p class="footer-copy">Un espacio para conectar productores, empresas, compradores y vendedores del sector agropecuario argentino.</p></div>
+        <div><h4>Explorá</h4><div class="footer-links"><a href="#publicaciones">Publicaciones</a><a href="#inicio">Inicio</a><button style="border:0;background:none;color:inherit;text-align:left;font-size:12px" onclick="handleCategories()">Categorías</button></div></div>
+        <div><h4>Tu cuenta</h4><div class="footer-links"><a href="#inicio" onclick="openAuth('signup')">Crear cuenta</a><a href="#inicio" onclick="openAuth('login')">Iniciar sesión</a><button style="border:0;background:none;color:inherit;text-align:left;font-size:12px" onclick="openPublish()">Publicar un producto</button></div></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 AGROMARKET. Todos los derechos reservados.</span><span>El mercado agropecuario argentino.</span></div>
+    </div>
+  </footer>
 
-<select id="producto-estado" required>
-<option value="">Estado del producto</option>
-<option value="Nuevo">Nuevo</option>
-<option value="Usado">Usado</option>
-</select>
-<br><br>
+  <div class="modal-backdrop hidden" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <div class="auth-modal">
+      <div class="auth-modal-top"><button type="button" class="modal-close" onclick="closeAuth()" aria-label="Cerrar"><span class="material-symbols-outlined">close</span></button><div class="brand"><div class="brand-mark"><span class="material-symbols-outlined">agriculture</span></div><div><div class="brand-name" style="color:#fff">AGRO<span>MARKET</span></div><div class="brand-tag" style="color:#d0dfd1">CONECTANDO EL CAMPO</div></div></div><h2 id="auth-title">Bienvenido a AGROMARKET</h2><p>Tu próximo negocio agropecuario puede empezar acá.</p></div>
+      <div class="auth-tabs"><button class="auth-tab active" id="tab-login" type="button" onclick="setAuthMode('login')">Iniciar sesión</button><button class="auth-tab" id="tab-signup" type="button" onclick="setAuthMode('signup')">Crear cuenta</button></div>
+      <form class="auth-form" id="auth-form">
+        <div class="auth-field hidden" id="signup-name-field"><label for="auth-name">Nombre completo</label><input id="auth-name" type="text" autocomplete="name" placeholder="Tu nombre y apellido"></div>
+        <div class="auth-field"><label for="auth-email">Correo electrónico</label><input id="auth-email" type="email" autocomplete="email" placeholder="nombre@correo.com" required></div>
+        <div class="auth-field"><label for="auth-password">Contraseña</label><input id="auth-password" type="password" autocomplete="current-password" minlength="8" placeholder="Mínimo 8 caracteres" required></div>
+        <div class="auth-field hidden" id="signup-type-field"><label for="auth-type">¿Cómo vas a usar AGROMARKET?</label><select id="auth-type"><option value="both">Comprador y vendedor</option><option value="buyer">Comprador</option><option value="seller">Vendedor</option></select></div>
+        <button class="btn btn-primary btn-block" id="auth-submit" type="submit">Ingresar</button>
+        <p class="auth-note" id="auth-note">Ingresá con el correo y la contraseña de tu cuenta.</p>
+        <p class="message" id="auth-message" role="status"></p>
+      </form>
+    </div>
+  </div>
 
-<input id="producto-precio" type="number"
-placeholder="Precio" min="0" required>
-<br><br>
+  <script>
+    // CONFIGURACIÓN: conservá tu URL y pegá aquí tu clave publicable actual de Supabase.
+    const SUPABASE_URL = "https://lnpcxbilzgzsmsposbat.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_c0_2I7UqDsGQc4f06Hs1TA_Z9KGEKzy";
+    const SUPABASE_CONFIGURED = Boolean(SUPABASE_KEY && SUPABASE_KEY.trim().length > 20);
+    const supabaseClient = SUPABASE_CONFIGURED ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
-<select id="producto-moneda" required>
-<option value="ARS">Pesos argentinos (ARS)</option>
-<option value="USD">Dólares (USD)</option>
-</select>
-<br><br>
+    const categoryIcons = {
+      "agricultura-produccion-vegetal":"psychiatry","agua-riego":"water_drop","almacenamiento-agropecuario":"warehouse","campos-negocios-rurales":"landscape","drones-tecnologia":"precision_manufacturing","energia-soluciones-rurales":"bolt","ganaderia":"pets","granos-semillas":"grass","herramientas-talleres":"handyman","industria-agropecuaria":"factory","instalaciones-rurales":"domain","insumos-agropecuarios":"science","lecheria-tambos":"water","lubricantes-mantenimiento":"settings","maquinaria-agricola":"agriculture","maquinaria-pesada":"construction","nutricion-animal":"vaccines","otras-actividades-agropecuarias":"park","repuestos-accesorios":"build","sanidad-animal":"medical_services","servicios-agropecuarios":"engineering","transporte-vehiculos":"local_shipping"
+    };
+    const categoryImage = {
+      machinery:"https://aegro.com.br/images/blog/geradas/plano-safra-2026-27-valores-novidades.webp",
+      livestock:"https://aegro.com.br/images/blog/geradas/fazenda-mista-como-calcular-e-comparar-a-rentabilidade-real-de-graos-e-pecuaria-de-corte.webp",
+      field:"https://aegro.com.br/images/blog/geradas/brachiaria-o-guia-completo-para-pasto-palhada-e-aumento-de-produtividade.webp"
+    };
+    let currentSession = null;
+    let categoryRows = [];
+    let listingRows = [];
+    let authMode = "login";
+    let heroIndex = 0;
+    let heroTimer = null;
 
-<input id="producto-ubicacion" type="text"
-placeholder="Localidad y provincia" required>
-<br><br>
-
-<button type="submit">PUBLICAR PRODUCTO</button>
-
-<p id="producto-mensaje"></p>
-
-</form>
-</div>
-</section>
-
-<footer>
-<h3>AGROMARKET</h3>
-<p>El mercado del campo · Argentina</p>
-<p>© 2026 AGROMARKET</p>
-</footer>
-
-<script>
-function buscar(){
-let texto=document.getElementById('busqueda').value.toLowerCase();
-let productos=document.querySelectorAll('.product');
-productos.forEach(p=>{
-p.style.display=p.innerText.toLowerCase().includes(texto)?'block':'none';
-});
-}
-function contactar(){
-alert('La función de contacto estará disponible próximamente.');
-}
-</script>
-  <section id="auth-section">
-  <h2>Crear cuenta en AGROMARKET</h2>
-
-  <input id="auth-name" type="text" placeholder="Nombre completo">
-
-  <input id="auth-email" type="email" placeholder="Correo electrónico">
-
-  <input id="auth-password" type="password" placeholder="Contraseña">
-
-  <select id="auth-type">
-    <option value="both">Comprador y vendedor</option>
-    <option value="buyer">Comprador</option>
-    <option value="seller">Vendedor</option>
-  </select>
-
-  <button onclick="registerUser()">Crear cuenta</button>
-
-  <p id="auth-message"></p>
-</section>
-
-<script>
-async function registerUser() {
-  const name = document.getElementById("auth-name").value.trim();
-  const email = document.getElementById("auth-email").value.trim();
-  const password = document.getElementById("auth-password").value;
-  const userType = document.getElementById("auth-type").value;
-  const message = document.getElementById("auth-message");
-
-  if (!name || !email || !password) {
-    message.textContent = "Completá todos los campos.";
-    return;
-  }
-
-  if (password.length < 8) {
-    message.textContent = "La contraseña debe tener al menos 8 caracteres.";
-    return;
-  }
-
-  message.textContent = "Creando cuenta...";
-
-  const { data, error } = await supabaseClient.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        full_name: name,
-        user_type: userType
-      }
+    function showMessage(elementId, text, isError=false){
+      const el=document.getElementById(elementId);
+      if(!el)return;
+      el.textContent=text;
+      el.style.color=isError?"#b44335":"#27623c";
     }
-  });
+    function openAuth(mode="signup"){
+      setAuthMode(mode);
+      document.getElementById("auth-modal").classList.remove("hidden");
+      document.body.classList.add("modal-open");
+      setTimeout(()=>document.getElementById("auth-email").focus(),50);
+    }
+    function closeAuth(){document.getElementById("auth-modal").classList.add("hidden");document.body.classList.remove("modal-open");}
+    function setAuthMode(mode){
+      authMode=mode;
+      const signup=mode==="signup";
+      document.getElementById("tab-login").classList.toggle("active",!signup);
+      document.getElementById("tab-signup").classList.toggle("active",signup);
+      document.getElementById("signup-name-field").classList.toggle("hidden",!signup);
+      document.getElementById("signup-type-field").classList.toggle("hidden",!signup);
+      document.getElementById("auth-title").textContent=signup?"Creá tu cuenta":"Bienvenido de nuevo";
+      document.getElementById("auth-submit").textContent=signup?"Crear cuenta":"Ingresar";
+      document.getElementById("auth-password").autocomplete=signup?"new-password":"current-password";
+      document.getElementById("auth-note").textContent=signup?"Al registrarte vas a poder explorar y publicar en AGROMARKET.":"Ingresá con el correo y la contraseña de tu cuenta.";
+      showMessage("auth-message","");
+    }
+    function updateAuthUI(session){
+      currentSession=session;
+      const loggedIn=!!(session&&session.user);
+      document.getElementById("guest-actions").classList.toggle("hidden",loggedIn);
+      document.getElementById("user-actions").classList.toggle("hidden",!loggedIn);
+      document.getElementById("guest-section").classList.toggle("hidden",loggedIn);
+      document.getElementById("dashboard-section").classList.toggle("hidden",!loggedIn);
+      document.getElementById("categories-section").classList.toggle("hidden",!loggedIn);
+      document.getElementById("header-user-name").textContent=loggedIn?(session.user.user_metadata?.full_name?.split(" ")[0]||"Mi cuenta"):"Mi cuenta";
+      document.getElementById("welcome-name").textContent=loggedIn?(session.user.user_metadata?.full_name?.split(" ")[0]||"productor"):"productor";
+      document.getElementById("mobile-auth-button").classList.toggle("hidden",loggedIn);
+      document.getElementById("mobile-logout-button").classList.toggle("hidden",!loggedIn);
+      if(loggedIn)closeAuth();
+    }
+    async function signOutUser(){
+      if(!supabaseClient)return;
+      const {error}=await supabaseClient.auth.signOut();
+      if(error){alert("No se pudo cerrar la sesión: "+error.message);return;}
+      updateAuthUI(null);
+      closePublish();
+      window.scrollTo({top:0,behavior:"smooth"});
+    }
+    async function handleAuthSubmit(event){
+      event.preventDefault();
+      if(!supabaseClient){showMessage("auth-message","Falta configurar la clave publicable de Supabase en este archivo.",true);return;}
+      const email=document.getElementById("auth-email").value.trim();
+      const password=document.getElementById("auth-password").value;
+      const button=document.getElementById("auth-submit");
+      button.disabled=true;button.textContent=authMode==="signup"?"Creando cuenta...":"Ingresando...";
+      let result;
+      if(authMode==="signup"){
+        const name=document.getElementById("auth-name").value.trim();
+        const userType=document.getElementById("auth-type").value;
+        if(!name){showMessage("auth-message","Ingresá tu nombre completo.",true);button.disabled=false;button.textContent="Crear cuenta";return;}
+        if(password.length<8){showMessage("auth-message","La contraseña debe tener al menos 8 caracteres.",true);button.disabled=false;button.textContent="Crear cuenta";return;}
+        result=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:name,user_type:userType}}});
+      }else{
+        result=await supabaseClient.auth.signInWithPassword({email,password});
+      }
+      button.disabled=false;button.textContent=authMode==="signup"?"Crear cuenta":"Ingresar";
+      if(result.error){showMessage("auth-message",result.error.message,true);return;}
+      if(authMode==="signup"&&!result.data.session){showMessage("auth-message","Registro iniciado. Revisá tu correo para confirmar la cuenta y después ingresá.");return;}
+      if(result.data.session){updateAuthUI(result.data.session);showMessage("auth-message","¡Listo! Ya ingresaste a AGROMARKET.");}
+    }
+    async function loadCategories(){
+      if(!supabaseClient){renderCategoryError("Configurá la clave publicable para cargar las categorías desde Supabase.");return;}
+      const {data,error}=await supabaseClient.from("categories").select("id,name,slug").eq("active",true).is("parent_id",null).order("name");
+      if(error){console.error("Error cargando categorías:",error);renderCategoryError("No se pudieron cargar las categorías. Revisá la conexión con Supabase.");return;}
+      categoryRows=data||[];
+      renderCategories();
+      populateCategorySelect();
+    }
+    function renderCategoryError(message){
+      const grid=document.getElementById("categories-grid");
+      const shortcuts=document.getElementById("dashboard-category-shortcuts");
+      if(grid)grid.innerHTML=`<div class="empty-state"><span class="material-symbols-outlined">error</span><p>${escapeHTML(message)}</p></div>`;
+      if(shortcuts)shortcuts.innerHTML="";
+    }
+    function iconForCategory(slug){return categoryIcons[slug]||"agriculture";}
+    function makeCategoryCard(category,compact=false){
+      const button=document.createElement("button");button.type="button";button.className="category-card";
+      const icon=document.createElement("span");icon.className="category-icon material-symbols-outlined";icon.textContent=iconForCategory(category.slug);
+      const copy=document.createElement("span");
+      const name=document.createElement("strong");name.textContent=category.name;
+      const hint=document.createElement("small");hint.textContent=compact?"Explorar rubro":"Ver publicaciones";
+      copy.append(name,hint);button.append(icon,copy);
+      button.addEventListener("click",()=>selectCategory(category.id,category.name));
+      return button;
+    }
+    function renderCategories(){
+      const grid=document.getElementById("categories-grid");const shortcuts=document.getElementById("dashboard-category-shortcuts");
+      grid.replaceChildren();shortcuts.replaceChildren();
+      if(!categoryRows.length){grid.innerHTML='<div class="empty-state"><span class="material-symbols-outlined">category</span><h3>Próximamente</h3><p>Las categorías estarán disponibles en breve.</p></div>';return;}
+      categoryRows.forEach((category,index)=>{
+        grid.appendChild(makeCategoryCard(category,false));
+        if(index<4)shortcuts.appendChild(makeCategoryCard(category,true));
+      });
+    }
+    function populateCategorySelect(){
+      const select=document.getElementById("listing-category");
+      select.replaceChildren(new Option("Seleccioná una categoría",""));
+      categoryRows.forEach(category=>select.add(new Option(category.name,category.id)));
+    }
+    function selectCategory(id,name){
+      if(!currentSession){openAuth("signup");return;}
+      document.getElementById("listing-category").value=id;
+      document.getElementById("listing-title").focus();
+      openPublish();
+      showMessage("publish-message","Categoría seleccionada: "+name);
+    }
+    function handleCategories(){
+      if(!currentSession){openAuth("signup");return;}
+      document.getElementById("categories-section").scrollIntoView({behavior:"smooth"});
+    }
+    function openPublish(){
+      if(!currentSession){openAuth("signup");return;}
+      const section=document.getElementById("publish-section");section.classList.remove("hidden");
+      section.scrollIntoView({behavior:"smooth"});
+    }
+    function closePublish(){document.getElementById("publish-section").classList.add("hidden");showMessage("publish-message","");}
+    function scrollToDashboard(){
+      if(!currentSession){openAuth("login");return;}
+      document.getElementById("dashboard-section").scrollIntoView({behavior:"smooth"});
+    }
+    function scrollToListings(){document.getElementById("publicaciones").scrollIntoView({behavior:"smooth"});}
+    function moneyText(price,currency){
+      if(price===null||price===undefined||price==="")return "Consultar precio";
+      const n=Number(price);if(!Number.isFinite(n))return "Consultar precio";
+      const code=currency||"ARS";
+      if(code==="Consultar")return "A convenir";
+      try{return new Intl.NumberFormat("es-AR",{style:"currency",currency:code,maximumFractionDigits:0}).format(n);}catch{return n.toLocaleString("es-AR")+(code==="USD"?" USD":" ARS");}
+    }
+    function imageForListing(listing){
+      const text=((listing.title||"")+" "+(listing.description||"")).toLowerCase();
+      if(text.match(/vaca|toro|ternero|hacienda|ganad|oveja|cerdo|porc/))return categoryImage.livestock;
+      if(text.match(/tractor|cosech|sembradora|fumigadora|maquina|implemento/))return categoryImage.machinery;
+      return categoryImage.field;
+    }
+    function renderListings(rows){
+      const grid=document.getElementById("publication-grid");grid.replaceChildren();
+      if(!rows||rows.length===0){
+        const empty=document.createElement("div");empty.className="empty-state";
+        empty.innerHTML='<span class="material-symbols-outlined">storefront</span><h3>Todavía no hay publicaciones</h3><p>Cuando los vendedores publiquen productos, vas a encontrarlos acá.</p>';
+        if(currentSession){const btn=document.createElement("button");btn.className="btn btn-primary";btn.type="button";btn.textContent="Sé de los primeros en publicar";btn.onclick=openPublish;empty.appendChild(btn);}
+        grid.appendChild(empty);return;
+      }
+      rows.forEach(row=>{
+        const category=categoryRows.find(c=>c.id===row.category_id);
+        const card=document.createElement("article");card.className="listing-card";
+        const imageWrap=document.createElement("div");imageWrap.className="listing-image";
+        const image=document.createElement("img");image.src=imageForListing(row);image.alt="Imagen ilustrativa de actividad agropecuaria";image.loading="lazy";image.onerror=()=>{image.src=categoryImage.field;};
+        const tag=document.createElement("span");tag.className="illustrative-label";tag.textContent="Imagen ilustrativa";imageWrap.append(image,tag);
+        const body=document.createElement("div");body.className="listing-body";
+        const cat=document.createElement("div");cat.className="listing-category";cat.textContent=category?.name||"AGROMARKET";
+        const title=document.createElement("h3");title.textContent=row.title||"Publicación agropecuaria";
+        const desc=document.createElement("p");desc.className="listing-description";desc.textContent=row.description||"Consultá los detalles de esta publicación.";
+        const price=document.createElement("div");price.className="listing-price";price.textContent=moneyText(row.price,row.currency);
+        const meta=document.createElement("div");meta.className="listing-meta";
+        const condition=document.createElement("span");condition.textContent=row.condition||"Consultar estado";
+        const sep=document.createElement("span");sep.textContent="·";
+        const location=document.createElement("span");location.textContent=row.location||"Argentina";
+        meta.append(condition,sep,location);body.append(cat,title,desc,price,meta);card.append(imageWrap,body);grid.appendChild(card);
+      });
+    }
+    async function loadListings(){
+      if(!supabaseClient){renderListings([]);return;}
+      const {data,error}=await supabaseClient.from("listings").select("id,title,description,price,condition,location,category_id,currency").limit(60);
+      if(error){
+        console.error("Error cargando publicaciones:",error);
+        // Algunas instalaciones pueden no tener todavía la columna currency.
+        const fallback=await supabaseClient.from("listings").select("id,title,description,price,condition,location,category_id").limit(60);
+        if(fallback.error){console.error(fallback.error);renderListings([]);showMessage("results-note","No se pudieron cargar las publicaciones. Revisá la tabla listings y sus permisos.",true);return;}
+        listingRows=fallback.data||[];
+      }else listingRows=data||[];
+      renderListings(listingRows);
+    }
+    function applySearch(query){
+      const q=query.trim().toLocaleLowerCase("es-AR");
+      const filtered=!q?listingRows:listingRows.filter(row=>[row.title,row.description,row.location].filter(Boolean).join(" ").toLocaleLowerCase("es-AR").includes(q));
+      renderListings(filtered);
+      const note=document.getElementById("results-note");note.textContent=q?`${filtered.length} resultado(s) para “${query.trim()}”`:"";
+      scrollToListings();
+    }
+    function quickSearch(text){document.getElementById("search-input").value=text;applySearch(text);}
+    function clearSearch(){document.getElementById("search-input").value="";applySearch("");}
+    async function submitListing(event){
+      event.preventDefault();
+      if(!currentSession||!supabaseClient){openAuth("login");return;}
+      const button=document.getElementById("publish-submit");button.disabled=true;button.textContent="Publicando...";
+      const record={
+        seller_id:currentSession.user.id,
+        category_id:document.getElementById("listing-category").value,
+        title:document.getElementById("listing-title").value.trim(),
+        description:document.getElementById("listing-description").value.trim(),
+        price:Number(document.getElementById("listing-price").value),
+        condition:document.getElementById("listing-condition").value,
+        location:document.getElementById("listing-location").value.trim()
+      };
+      const currency=document.getElementById("listing-currency").value;
+      let result=await supabaseClient.from("listings").insert({...record,currency,status:"published"});
+      if(result.error)result=await supabaseClient.from("listings").insert({...record,currency});
+      if(result.error)result=await supabaseClient.from("listings").insert(record);
+      button.disabled=false;button.innerHTML='Publicar producto <span class="material-symbols-outlined">arrow_forward</span>';
+      if(result.error){console.error("Error publicando:",result.error);showMessage("publish-message","No se pudo publicar: "+result.error.message,true);return;}
+      showMessage("publish-message","¡Tu publicación se guardó correctamente!");
+      document.getElementById("publish-form").reset();
+      await loadListings();
+      scrollToListings();
+    }
+    function escapeHTML(value){return String(value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));}
 
-  if (error) {
-    message.textContent = "Error: " + error.message;
-    return;
-  }
+    // Carrusel principal: cambia solo y también permite avanzar manualmente.
+    function showHeroSlide(index){
+      const slides=[...document.querySelectorAll(".hero-slide")];if(!slides.length)return;
+      heroIndex=(index+slides.length)%slides.length;
+      slides.forEach((slide,i)=>slide.classList.toggle("active",i===heroIndex));
+      document.querySelectorAll(".hero-dot").forEach((dot,i)=>dot.classList.toggle("active",i===heroIndex));
+    }
+    function startHeroCarousel(){
+      const slides=[...document.querySelectorAll(".hero-slide")];const dots=document.getElementById("hero-dots");
+      slides.forEach((slide,i)=>{const dot=document.createElement("button");dot.type="button";dot.className="hero-dot"+(i===0?" active":"");dot.setAttribute("aria-label","Mostrar imagen "+(i+1));dot.addEventListener("click",()=>{showHeroSlide(i);restartHeroTimer();});dots.appendChild(dot);});
+      document.getElementById("hero-prev").addEventListener("click",()=>{showHeroSlide(heroIndex-1);restartHeroTimer();});
+      document.getElementById("hero-next").addEventListener("click",()=>{showHeroSlide(heroIndex+1);restartHeroTimer();});
+      if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches)heroTimer=setInterval(()=>showHeroSlide(heroIndex+1),3000);
+    }
+    function restartHeroTimer(){if(heroTimer)clearInterval(heroTimer);if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches)heroTimer=setInterval(()=>showHeroSlide(heroIndex+1),3000);}
+    function closeMobileMenu(){document.getElementById("mobile-menu").classList.remove("open");}
 
-  message.textContent =
-    "Registro iniciado. Revisá tu correo para confirmar la cuenta.";
-}
- </script>
+    document.getElementById("auth-form").addEventListener("submit",handleAuthSubmit);
+    document.getElementById("publish-form").addEventListener("submit",submitListing);
+    document.getElementById("search-form").addEventListener("submit",event=>{event.preventDefault();applySearch(document.getElementById("search-input").value);});
+    document.getElementById("nav-categories").addEventListener("click",handleCategories);
+    document.getElementById("mobile-toggle").addEventListener("click",()=>document.getElementById("mobile-menu").classList.toggle("open"));
+    document.getElementById("auth-modal").addEventListener("click",event=>{if(event.target.id==="auth-modal")closeAuth();});
+    document.addEventListener("keydown",event=>{if(event.key==="Escape")closeAuth();});
+    startHeroCarousel();
 
-<script>
-async function cargarCategorias() {
-  const contenedor = document.getElementById("categorias-lista");
-
-  const { data, error } = await supabaseClient
-    .from("categories")
-    .select("id, name, slug")
-    .eq("active", true)
-    .is("parent_id", null)
-    .order("name");
-
-  if (error) {
-    console.error("Error cargando categorías:", error);
-    contenedor.textContent = "No se pudieron cargar las categorías.";
-    return;
-  }
-
-  if (!data || data.length === 0) {
-    contenedor.textContent = "Todavía no hay categorías disponibles.";
-    return;
-  }
-
-  contenedor.replaceChildren();
-
-  const iconos = {
-    "agricultura-produccion-vegetal": "🌱",
-    "agua-riego": "💧",
-    "almacenamiento-agropecuario": "🏭",
-    "campos-negocios-rurales": "🌾",
-    "drones-tecnologia": "🚁",
-    "energia-soluciones-rurales": "⚡",
-    "ganaderia": "🐄",
-    "granos-semillas": "🌽",
-    "herramientas-talleres": "🧰",
-    "industria-agropecuaria": "🏭",
-    "instalaciones-rurales": "🚧",
-    "insumos-agropecuarios": "🧪",
-    "lecheria-tambos": "🥛",
-    "lubricantes-mantenimiento": "⚙️",
-    "maquinaria-agricola": "🚜",
-    "maquinaria-pesada": "🏗️",
-    "nutricion-animal": "🐄",
-    "otras-actividades-agropecuarias": "🌳",
-    "repuestos-accesorios": "🔩",
-    "sanidad-animal": "🩺",
-    "servicios-agropecuarios": "🛠️",
-    "transporte-vehiculos": "🚛"
-  };
-
-  data.forEach(categoria => {
-    const tarjeta = document.createElement("div");
-    tarjeta.className = "category";
-
-    const icono = document.createElement("span");
-    icono.textContent = iconos[categoria.slug] || "🌱";
-
-    const nombre = document.createElement("div");
-    nombre.textContent = categoria.name;
-
-    tarjeta.append(icono, nombre);
-    contenedor.appendChild(tarjeta);
-  });
-
-  console.log("AGROMARKET: categorías cargadas:", data.length);
-}
-
-cargarCategorias();
-  
-</script>
+    async function initialiseApp(){
+      if(!supabaseClient){
+        console.warn("AGROMARKET: falta configurar SUPABASE_KEY. La interfaz puede verse, pero las funciones de cuenta y datos no se conectarán.");
+        renderCategoryError("Falta configurar la clave publicable de Supabase.");renderListings([]);return;
+      }
+      const {data,error}=await supabaseClient.auth.getSession();
+      if(error)console.error("No se pudo recuperar la sesión:",error);
+      updateAuthUI(data?.session||null);
+      supabaseClient.auth.onAuthStateChange((_event,session)=>{updateAuthUI(session);});
+      await loadCategories();
+      await loadListings();
+    }
+    initialiseApp();
+  </script>
 </body>
 </html>
+ 
