@@ -579,7 +579,7 @@
         const desc=document.createElement("p");desc.className="listing-description";desc.textContent=row.description||"Consultá los detalles de esta publicación.";
         const price=document.createElement("div");price.className="listing-price";price.textContent=moneyText(row.price,row.currency);
         const meta=document.createElement("div");meta.className="listing-meta";
-        const condition=document.createElement("span");condition.textContent=row.condition||"Consultar estado";
+        const condition=document.createElement("span")condition.textContent=row.condition==="new"?"Nuevo":row.condition==="used"?"Usado":"Consultar estado";
         const sep=document.createElement("span");sep.textContent="·";
         const location=document.createElement("span");location.textContent=row.location||"Argentina";
         meta.append(condition,sep,location);body.append(cat,title,desc,price,meta);card.append(imageWrap,body);grid.appendChild(card);
