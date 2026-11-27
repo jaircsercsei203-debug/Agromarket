@@ -128,6 +128,25 @@
     .listing-card:hover{transform:translateY(-4px);box-shadow:0 13px 28px #173b2415}
     .listing-image{height:170px;position:relative;background:#dfe8da;overflow:hidden}
     .listing-image img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
+    .listing-video{
+  padding:12px;
+  background:#fff;
+}
+
+.listing-video video{
+  width:100%;
+  max-height:220px;
+  object-fit:contain;
+  display:block;
+  border-radius:10px;
+  background:#000;
+}
+
+.listing-video p{
+  font-size:11px;
+  color:#718078;
+  margin-top:5px;
+}
     .listing-card:hover .listing-image img{transform:scale(1.04)}
     .illustrative-label{position:absolute;left:11px;top:11px;background:#0e3825d9;color:white;border-radius:30px;padding:5px 9px;font-size:9px;font-weight:800;letter-spacing:.3px}
     .listing-body{padding:16px}
@@ -346,7 +365,6 @@
             <div class="field"><label for="listing-currency">Moneda</label><select id="listing-currency"><option value="ARS">Pesos argentinos (ARS)</option><option value="USD">Dólares (USD)</option><option value="Consultar">A convenir / consultar</option></select></div>
             <div class="field full"><label for="listing-location">Ubicación *</label><input id="listing-location" type="text" maxlength="120" placeholder="Localidad y provincia" required></div>
             <div class="field full">
-  <div class="field full">
   <label for="listing-videos">Videos del producto</label>
   <input
     id="listing-videos"
@@ -374,7 +392,7 @@
   </small>
 </div>
             <div class="field full"><label for="listing-description">Descripción *</label><textarea id="listing-description" maxlength="3000" placeholder="Contá las características, el estado y los detalles importantes del producto..." required></textarea></div>
-            <div class="form-foot"><small>La publicación quedará asociada a tu cuenta. Revisá los datos antes de enviarla. En el siguiente paso incorporaremos la carga de fotografías.</small><button class="btn btn-primary" id="publish-submit" type="submit">Publicar producto <span class="material-symbols-outlined">arrow_forward</span></button></div>
+            <div class="form-foot"><small>La publicación quedará asociada a tu cuenta. Revisá los datos antes de enviarla. Podés agregar fotografías y videos para mostrar mejor tu producto.</small><button class="btn btn-primary" id="publish-submit" type="submit">Publicar producto <span class="material-symbols-outlined">arrow_forward</span></button></div>
           </form>
           <p class="message" id="publish-message" role="status"></p>
         </div>
@@ -413,7 +431,7 @@
     // CONFIGURACIÓN: conservá tu URL y pegá aquí tu clave publicable actual de Supabase.
     const SUPABASE_URL = "https://lnpcxbilzgzsmsposbat.supabase.co";
     const SUPABASE_KEY = "sb_publishable_c0_2I7UqDsGQc4f06Hs1TA_Z9KGEKzy";
-    const SUPABASE_CONFIGURED = Boolean(SUPABASE_KEY && SUPABASE_KEY.trim().length > 20);
+   const SUPABASE_CONFIGURED = Boolean(SUPABASE_KEY && SUPABASE_KEY.trim().length > 20);
     const supabaseClient = SUPABASE_CONFIGURED ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
     const categoryIcons = {
@@ -587,46 +605,214 @@
       if(text.match(/tractor|cosech|sembradora|fumigadora|maquina|máquina|implemento/))return categoryImage.machinery;
       return categoryImage.field;
     }
-    function renderListings(rows){
-      const grid=document.getElementById("publication-grid");grid.replaceChildren();
-      if(!rows||rows.length===0){
-        const empty=document.createElement("div");empty.className="empty-state";
-        empty.innerHTML='<span class="material-symbols-outlined">storefront</span><h3>Todavía no hay publicaciones</h3><p>Cuando los vendedores publiquen productos, vas a encontrarlos acá.</p>';
-        if(currentSession){const btn=document.createElement("button");btn.className="btn btn-primary";btn.type="button";btn.textContent="Sé de los primeros en publicar";btn.onclick=openPublish;empty.appendChild(btn);}
-        grid.appendChild(empty);return;
-      }
-      rows.forEach(row=>{
-        const category=categoryRows.find(c=>c.id===row.category_id);
-        const card=document.createElement("article");card.className="listing-card";
-        const imageWrap=document.createElement("div");imageWrap.className="listing-image";
-        const image=document.createElement("img");image.src=imageForListing(row);image.alt="Imagen ilustrativa de actividad agropecuaria";image.loading="lazy";image.onerror=()=>{image.src=categoryImage.field;};
-        const tag=document.createElement("span");tag.className="illustrative-label";tag.textContent="Imagen ilustrativa";imageWrap.append(image,tag);
-        const body=document.createElement("div");body.className="listing-body";
-        const cat=document.createElement("div");cat.className="listing-category";cat.textContent=category?.name||"AGROMARKET";
-        const title=document.createElement("h3");title.textContent=row.title||"Publicación agropecuaria";
-        const desc=document.createElement("p");desc.className="listing-description";desc.textContent=row.description||"Consultá los detalles de esta publicación.";
-        const price=document.createElement("div");price.className="listing-price";price.textContent=moneyText(row.price,row.currency);
-        const meta=document.createElement("div");meta.className="listing-meta";
-       const condition = document.createElement("span");
-condition.textContent = row.condition === "new" ? "Nuevo" : row.condition === "used" ? "Usado" : "Consultar estado";
-        const sep=document.createElement("span");sep.textContent="·";
-        const location=document.createElement("span");location.textContent=row.location||"Argentina";
-        meta.append(condition,sep,location);body.append(cat,title,desc,price,meta);card.append(imageWrap,body);grid.appendChild(card);
-      });
+  
+function renderListings(rows){
+  const grid=document.getElementById("publication-grid");
+  grid.replaceChildren();
+
+  if(!rows||rows.length===0){
+    const empty=document.createElement("div");
+    empty.className="empty-state";
+    empty.innerHTML='<span class="material-symbols-outlined">storefront</span><h3>Todavía no hay publicaciones</h3><p>Cuando los vendedores publiquen productos, vas a encontrarlos acá.</p>';
+
+    if(currentSession){
+      const btn=document.createElement("button");
+      btn.className="btn btn-primary";
+      btn.type="button";
+      btn.textContent="Sé de los primeros en publicar";
+      btn.onclick=openPublish;
+      empty.appendChild(btn);
     }
-    async function loadListings(){
-      if(!supabaseClient){renderListings([]);return;}
-      const {data,error}=await supabaseClient.from("listings").select("id,title,description,price,condition,location,category_id,currency").limit(60);
-      if(error){
-        console.error("Error cargando publicaciones:",error);
-        // Algunas instalaciones pueden no tener todavía la columna currency.
-        const fallback=await supabaseClient.from("listings").select("id,title,description,price,condition,location,category_id").limit(60);
-        if(fallback.error){console.error(fallback.error);renderListings([]);showMessage("results-note","No se pudieron cargar las publicaciones. Revisá la tabla listings y sus permisos.",true);return;}
-        listingRows=fallback.data||[];
-      }else listingRows=data||[];
-      renderListings(listingRows);
+
+    grid.appendChild(empty);
+    return;
+  }
+
+  rows.forEach(row=>{
+    const category=categoryRows.find(c=>c.id===row.category_id);
+
+    const card=document.createElement("article");
+    card.className="listing-card";
+
+    const imageWrap=document.createElement("div");
+    imageWrap.className="listing-image";
+
+    const images=row.images||[];
+    const videos=row.videos||[];
+
+    const image=document.createElement("img");
+    image.src=images.length ? images[0].url : imageForListing(row);
+    image.alt=images.length ? "Fotografía del producto publicado" : "Imagen ilustrativa de actividad agropecuaria";
+    image.loading="lazy";
+
+    image.onerror=()=>{
+      image.src=imageForListing(row);
+    };
+
+    imageWrap.appendChild(image);
+
+    if(images.length===0){
+      const tag=document.createElement("span");
+      tag.className="illustrative-label";
+      tag.textContent="Imagen ilustrativa";
+      imageWrap.appendChild(tag);
+    }else if(images.length>1){
+      const count=document.createElement("span");
+      count.className="illustrative-label";
+      count.textContent=images.length+" fotografías";
+      imageWrap.appendChild(count);
     }
-    function applySearch(query){
+
+   
+let videoWrap=null;
+
+if(videos.length>0){
+  videoWrap=document.createElement("div");
+  videoWrap.className="listing-video";
+
+  const video=document.createElement("video");
+  video.src=videos[0].url;
+  video.controls=true;
+  video.preload="metadata";
+  video.playsInline=true;
+
+  videoWrap.appendChild(video);
+
+  if(videos.length>1){
+    const videoCount=document.createElement("p");
+    videoCount.textContent=videos.length+" videos disponibles";
+    videoWrap.appendChild(videoCount);
+  }
+}
+
+  
+
+    const body=document.createElement("div");
+    body.className="listing-body";
+
+    const cat=document.createElement("div");
+    cat.className="listing-category";
+    cat.textContent=category?.name||"AGROMARKET";
+
+    const title=document.createElement("h3");
+    title.textContent=row.title||"Publicación agropecuaria";
+
+    const desc=document.createElement("p");
+    desc.className="listing-description";
+    desc.textContent=row.description||"Consultá los detalles de esta publicación.";
+
+    const price=document.createElement("div");
+    price.className="listing-price";
+    price.textContent=moneyText(row.price,row.currency);
+
+    const meta=document.createElement("div");
+    meta.className="listing-meta";
+
+    const condition=document.createElement("span");
+    condition.textContent=row.condition==="new" ? "Nuevo" : row.condition==="used" ? "Usado" : "Consultar estado";
+
+    const sep=document.createElement("span");
+    sep.textContent="·";
+
+    const location=document.createElement("span");
+    location.textContent=row.location||"Argentina";
+
+    meta.append(condition,sep,location);
+    body.append(cat,title,desc,price,meta);
+   if(videoWrap){
+  card.append(imageWrap,videoWrap,body);
+}else{
+  card.append(imageWrap,body);
+}
+    grid.appendChild(card);
+  });
+}
+
+async function loadListings(){
+  if(!supabaseClient){
+    renderListings([]);
+    return;
+  }
+
+  const {data,error}=await supabaseClient
+    .from("listings")
+    .select("id,title,description,price,condition,location,category_id,currency")
+    .limit(60);
+
+  if(error){
+    console.error("Error cargando publicaciones:",error);
+
+    const fallback=await supabaseClient
+      .from("listings")
+      .select("id,title,description,price,condition,location,category_id")
+      .limit(60);
+
+    if(fallback.error){
+      console.error(fallback.error);
+      renderListings([]);
+      showMessage("results-note","No se pudieron cargar las publicaciones. Revisá la tabla listings y sus permisos.",true);
+      return;
+    }
+
+    listingRows=fallback.data||[];
+  }else{
+    listingRows=data||[];
+  }
+
+  const listingIds=listingRows.map(row=>row.id);
+
+  if(listingIds.length===0){
+    renderListings([]);
+    return;
+  }
+
+  const [imagesResult,videosResult]=await Promise.all([
+    supabaseClient
+      .from("listing_images")
+      .select("listing_id,storage_path,position")
+      .in("listing_id",listingIds)
+      .order("position"),
+
+    supabaseClient
+      .from("listing_videos")
+      .select("listing_id,storage_path,position")
+      .in("listing_id",listingIds)
+      .order("position")
+  ]);
+
+  if(imagesResult.error){
+    console.error("Error cargando fotografías:",imagesResult.error);
+  }
+
+  if(videosResult.error){
+    console.error("Error cargando videos:",videosResult.error);
+  }
+
+  listingRows=listingRows.map(row=>{
+    const images=(imagesResult.data||[])
+      .filter(item=>item.listing_id===row.id)
+      .map(item=>({
+        ...item,
+        url:supabaseClient.storage
+          .from("agromarket-images")
+          .getPublicUrl(item.storage_path).data.publicUrl
+      }));
+
+    const videos=(videosResult.data||[])
+      .filter(item=>item.listing_id===row.id)
+      .map(item=>({
+        ...item,
+        url:supabaseClient.storage
+          .from("agromarket-videos")
+          .getPublicUrl(item.storage_path).data.publicUrl
+      }));
+
+    return {...row,images,videos};
+  });
+
+  renderListings(listingRows);
+}
+  function applySearch(query){
       const q=query.trim().toLocaleLowerCase("es-AR");
       const filtered=!q?listingRows:listingRows.filter(row=>[row.title,row.description,row.location].filter(Boolean).join(" ").toLocaleLowerCase("es-AR").includes(q));
       renderListings(filtered);
@@ -635,30 +821,240 @@ condition.textContent = row.condition === "new" ? "Nuevo" : row.condition === "u
     }
     function quickSearch(text){document.getElementById("search-input").value=text;applySearch(text);}
     function clearSearch(){document.getElementById("search-input").value="";applySearch("");}
-    async function submitListing(event){
-      event.preventDefault();
-      if(!currentSession||!supabaseClient){openAuth("login");return;}
-      const button=document.getElementById("publish-submit");button.disabled=true;button.textContent="Publicando...";
-      const record={
-        seller_id:currentSession.user.id,
-        category_id:document.getElementById("listing-category").value,
-        title:document.getElementById("listing-title").value.trim(),
-        description:document.getElementById("listing-description").value.trim(),
-        price:Number(document.getElementById("listing-price").value),
-        condition:document.getElementById("listing-condition").value,
-        location:document.getElementById("listing-location").value.trim()
-      };
-      const currency=document.getElementById("listing-currency").value;
-      let result=await supabaseClient.from("listings").insert({...record,currency,status:"published"});
-      if(result.error)result=await supabaseClient.from("listings").insert({...record,currency});
-      if(result.error)result=await supabaseClient.from("listings").insert(record);
-      button.disabled=false;button.innerHTML='Publicar producto <span class="material-symbols-outlined">arrow_forward</span>';
-      if(result.error){console.error("Error publicando:",result.error);showMessage("publish-message","No se pudo publicar: "+result.error.message,true);return;}
-      showMessage("publish-message","¡Tu publicación se guardó correctamente!");
-      document.getElementById("publish-form").reset();
-      await loadListings();
-      scrollToListings();
+  
+async function submitListing(event) {
+  event.preventDefault();
+
+  if (!currentSession || !supabaseClient) {
+    openAuth("login");
+    return;
+  }
+
+  const photos = Array.from(
+    document.getElementById("listing-photos").files || []
+  );
+
+  const videos = Array.from(
+    document.getElementById("listing-videos").files || []
+  );
+
+  const imageMime = {
+    jpg: "image/jpeg",
+    jpeg: "image/jpeg",
+    png: "image/png",
+    webp: "image/webp",
+    avif: "image/avif",
+    gif: "image/gif",
+    heic: "image/heic",
+    heif: "image/heif"
+  };
+
+  const videoMime = {
+    mp4: "video/mp4",
+    mov: "video/quicktime",
+    webm: "video/webm"
+  };
+
+  const extension = file =>
+    file.name.split(".").pop().toLowerCase();
+
+  if (photos.length > 20) {
+    showMessage("publish-message", "Podés subir hasta 20 fotografías.", true);
+    return;
+  }
+
+  if (videos.length > 2) {
+    showMessage("publish-message", "Podés subir hasta 2 videos.", true);
+    return;
+  }
+
+  if (photos.some(file =>
+    !imageMime[extension(file)] || file.size > 10 * 1024 * 1024
+  )) {
+    showMessage("publish-message",
+      "Revisá las fotografías: formatos permitidos JPG, PNG, WebP, AVIF, GIF, HEIC y HEIF. Máximo 10 MB cada una.",
+      true
+    );
+    return;
+  }
+
+  if (videos.some(file =>
+    !videoMime[extension(file)] || file.size > 25 * 1024 * 1024
+  )) {
+    showMessage("publish-message",
+      "Los videos deben ser MP4, MOV o WebM y pesar como máximo 25 MB cada uno.",
+      true
+    );
+    return;
+  }
+
+  const button = document.getElementById("publish-submit");
+  button.disabled = true;
+  button.textContent = "Publicando...";
+
+  let listingId = null;
+
+  const uploaded = {
+    images: [],
+    videos: []
+  };
+
+  try {
+    const record = {
+      seller_id: currentSession.user.id,
+      category_id: document.getElementById("listing-category").value,
+      title: document.getElementById("listing-title").value.trim(),
+      description: document.getElementById("listing-description").value.trim(),
+      price: Number(document.getElementById("listing-price").value),
+      condition: document.getElementById("listing-condition").value,
+      location: document.getElementById("listing-location").value.trim()
+    };
+
+    const currency = document.getElementById("listing-currency").value;
+
+    let payload = {
+      ...record,
+      currency,
+      status: "published"
+    };
+
+    const missingColumn = error =>
+      error?.code === "42703" ||
+      error?.code === "PGRST204" ||
+      /column .* does not exist|could not find the .* column|schema cache/i.test(error?.message || "");
+
+    let result = await supabaseClient
+      .from("listings")
+      .insert(payload)
+      .select("id")
+      .single();
+
+    if (result.error && missingColumn(result.error) && "status" in payload) {
+      delete payload.status;
+
+      result = await supabaseClient
+        .from("listings")
+        .insert(payload)
+        .select("id")
+        .single();
     }
+
+    if (result.error && missingColumn(result.error) && "currency" in payload) {
+      delete payload.currency;
+
+      result = await supabaseClient
+        .from("listings")
+        .insert(payload)
+        .select("id")
+        .single();
+    }
+
+    if (result.error) {
+      throw new Error("No se pudo guardar la publicación: " + result.error.message);
+    }
+
+    listingId = result.data?.id;
+
+    if (!listingId) {
+      throw new Error("No se pudo obtener el identificador de la publicación.");
+    }
+
+    async function uploadFiles(files, bucket, table, mimeMap, uploadedPaths) {
+      const rows = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const ext = extension(file);
+        const path =
+          `${currentSession.user.id}/${listingId}/${Date.now()}-${i}-${crypto.randomUUID()}.${ext}`;
+
+        const { error: uploadError } = await supabaseClient
+          .storage
+          .from(bucket)
+          .upload(path, file, {
+            contentType: mimeMap[ext],
+            upsert: false
+          });
+
+        if (uploadError) {
+          throw new Error("No se pudo subir " + file.name + ": " + uploadError.message);
+        }
+
+        uploadedPaths.push(path);
+
+        rows.push({
+          listing_id: listingId,
+          storage_path: path,
+          position: i
+        });
+      }
+
+      if (rows.length > 0) {
+        const { error } = await supabaseClient
+          .from(table)
+          .insert(rows);
+
+        if (error) {
+          throw new Error("No se pudieron guardar los archivos: " + error.message);
+        }
+      }
+    }
+
+    showMessage("publish-message", "Subiendo fotografías y videos...");
+
+    await uploadFiles(
+      photos,
+      "agromarket-images",
+      "listing_images",
+      imageMime,
+      uploaded.images
+    );
+
+    await uploadFiles(
+      videos,
+      "agromarket-videos",
+      "listing_videos",
+      videoMime,
+      uploaded.videos
+    );
+
+    showMessage("publish-message", "¡Publicación y archivos guardados correctamente!");
+
+    document.getElementById("publish-form").reset();
+
+    await loadListings();
+    scrollToListings();
+
+  } catch (error) {
+    console.error("Error publicando:", error);
+
+    if (listingId) {
+      await supabaseClient.from("listing_images").delete().eq("listing_id", listingId);
+      await supabaseClient.from("listing_videos").delete().eq("listing_id", listingId);
+
+      if (uploaded.images.length) {
+        await supabaseClient.storage.from("agromarket-images").remove(uploaded.images);
+      }
+
+      if (uploaded.videos.length) {
+        await supabaseClient.storage.from("agromarket-videos").remove(uploaded.videos);
+      }
+
+      await supabaseClient.from("listings").delete().eq("id", listingId);
+    }
+
+    showMessage(
+      "publish-message",
+      "No se pudo completar la publicación: " + error.message,
+      true
+    );
+
+  } finally {
+    button.disabled = false;
+    button.innerHTML = 'Publicar producto <span class="material-symbols-outlined">arrow_forward</span>';
+  }
+}
+
     function escapeHTML(value){return String(value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));}
 
     // Carrusel principal: cambia solo y también permite avanzar manualmente.
