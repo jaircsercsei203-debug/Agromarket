@@ -345,6 +345,34 @@
             <div class="field"><label for="listing-price">Precio *</label><input id="listing-price" type="number" min="0" step="0.01" placeholder="Ej.: 85000000" required></div>
             <div class="field"><label for="listing-currency">Moneda</label><select id="listing-currency"><option value="ARS">Pesos argentinos (ARS)</option><option value="USD">Dólares (USD)</option><option value="Consultar">A convenir / consultar</option></select></div>
             <div class="field full"><label for="listing-location">Ubicación *</label><input id="listing-location" type="text" maxlength="120" placeholder="Localidad y provincia" required></div>
+            <div class="field full">
+  <div class="field full">
+  <label for="listing-videos">Videos del producto</label>
+  <input
+    id="listing-videos"
+    type="file"
+    accept=".mp4,.mov,.webm,video/mp4,video/quicktime,video/webm"
+    multiple
+  >
+  <small>
+    Podés seleccionar hasta 2 videos cortos.
+    Formatos MP4, MOV y WebM.
+  </small>
+</div>
+              <div class="field full">
+  <label for="listing-photos">Fotografías del producto</label>
+  <input
+    id="listing-photos"
+    type="file"
+    accept=".jpg,.jpeg,.png,.webp,.avif,.gif,.heic,.heif,image/jpeg,image/png,image/webp,image/avif,image/gif,image/heic,image/heif"
+    multiple
+  >
+  <small>
+    Hasta 20 fotografías por publicación.
+    JPG, JPEG, PNG, WebP, AVIF, GIF, HEIC y HEIF.
+    Máximo 10 MB por fotografía.
+  </small>
+</div>
             <div class="field full"><label for="listing-description">Descripción *</label><textarea id="listing-description" maxlength="3000" placeholder="Contá las características, el estado y los detalles importantes del producto..." required></textarea></div>
             <div class="form-foot"><small>La publicación quedará asociada a tu cuenta. Revisá los datos antes de enviarla. En el siguiente paso incorporaremos la carga de fotografías.</small><button class="btn btn-primary" id="publish-submit" type="submit">Publicar producto <span class="material-symbols-outlined">arrow_forward</span></button></div>
           </form>
